@@ -323,34 +323,33 @@
         <div class="form-group">
             <label>Modalidade de Trabalho <span style="color: var(--danger);">*</span>:</label>
             <div class="radio-group">
-                <!--
-                <label class="radio-label">
-                    <input type="radio" name="modality" value="duo" required onclick="toggleMember2(true)"> Em Dupla 
-                </label> 
-                <label class="radio-label">
-                    <input type="radio" name="modality" value="solo" required onclick="toggleMember2(false)"> Individual
-                </label> -->
-                <!-- Opção individual que já vem selecionada por padrão -->
-                <label class="radio-label"> 
-                    <input type="radio" name="modality" value="individual" required checked> Individual 
+           
+             <label class="radio-label">
+                    <input type="radio" name="modality" value="individual" required checked onclick="toggleMember2(false)"> Individual
                 </label>
+                <!-- A OPÇÃO EM DUPLA FOI REMOVIDA DA EXIBIÇÃO COMENTANDO O BLOCO ABAIXO -->
+                <!-- 
+                <label class="radio-label">
+                    <input type="radio" name="modality" value="duo" required onclick="toggleMember2(true)"> Em Dupla
+                </label>
+                -->
             </div>
         </div>
 
         <div class="form-group">
-            <label for="student1">Nome do Aluno 1 <span style="color: var(--danger);">*</span>:</label>
-            <input type="text" id="student1" placeholder="Digite o nome completo" required>
+            <label for="member1">Nome do Integrante 1:</label>
+            <input type="text" id="member1" required placeholder="Digite o nome completo">
         </div>
 
-        <!-- Oculto por padrão até o aluno selecionar "Em Dupla" -->
-        <div class="form-group" id="groupStudent2" style="display: none;">
-            <label for="student2">Nome do Aluno 2 <span style="color: var(--danger);">*</span>:</label>
-            <input type="text" id="student2" placeholder="Digite o nome completo">
+        <!-- Este campo do integrante 2 deve iniciar oculto com display:none já que a dupla foi removida -->
+        <div class="form-group" id="groupMember2" style="display: none;">
+            <label for="member2">Nome do Integrante 2:</label>
+            <input type="text" id="member2" placeholder="Digite o nome completo">
         </div>
 
-        <button type="submit" id="btnSubmit" class="btn-submit">Registrar e Sortear Desafio</button>
+        <button type="submit" id="btnSubmit" class="btn-submit">Realizar Sorteio do Tema</button>
     </form>
-
+    
     <div id="resultCard" class="result-card">
         <h2>Desafio Sorteado</h2>
         <div id="resTeam" style="font-weight: bold; margin-bottom: 10px; color: #fff;"></div>
