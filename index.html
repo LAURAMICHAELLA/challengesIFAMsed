@@ -580,7 +580,7 @@
         const indiceSorteado = Math.floor(Math.random() * disponiveis.length);
         const objetoSorteado = disponiveis[indiceSorteado];
 
-        // Enviar para o Google Apps Script
+       // Enviar para o Google Apps Script
         try {
             await fetch(SCRIPT_URL, {
                 method: 'POST',
@@ -589,19 +589,24 @@
                 body: JSON.stringify({
                     modalidade: isDuo ? "Dupla" : "Individual",
                     equipe: nomeEquipe,
-                    desafio: objetoSorteado.title
-                  //  descricao: objetoSorteado.desc // <--- Adicione esta linha
+                    desafio: objetoSorteado.title,
+                    descricao: objetoSorteado.desc // 1. ATIVADO: Agora envia para o Apps Script
                 })
             });
 
             registrosNaNuvem.push({
                 modalidade: isDuo ? "Dupla" : "Individual",
                 equipe: nomeEquipe,
-                desafio: objetoSorteado.title
+                desafio: objetoSorteado.title,
+                descricao: objetoSorteado.desc // Guardado no histórico local também
             });
 
             atualizarContador();
             atualizarTabelaProfessor();
+            
+            // 2. Garante que a descrição apareça na tela injetando o texto no HTML
+            document.getElementById('resChallengeDesc').innerText = objetoSorteado.desc;
+            
             exibirResultado(nomeEquipe, objetoSorteado, false);
         } catch (err) {
             alert("Erro ao salvar no servidor. Tente novamente.");
