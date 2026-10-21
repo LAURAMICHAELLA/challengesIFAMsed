@@ -522,17 +522,17 @@
             return;
         }
 
-        const isDuo = modalityOption.value === 'duo';
+        // const isDuo = modalityOption.value === 'duo';
         const s1 = document.getElementById('student1').value.trim();
-        const s2 = document.getElementById('student2').value.trim();
+        // const s2 = document.getElementById('student2').value.trim();
 
-        if (isDuo && !s2) {
-            alert("Por favor, preencha o nome do segundo aluno.");
-            return;
-        }
+        // if (isDuo && !s2) {
+        //     alert("Por favor, preencha o nome do segundo aluno.");
+        //     return;
+        // }
 
-        const novosAlunos = isDuo ? [normalizarNome(s1), normalizarNome(s2)] : [normalizarNome(s1)];
-        const nomeEquipe = isDuo ? `${s1} e ${s2}` : s1;
+        // const novosAlunos = isDuo ? [normalizarNome(s1), normalizarNome(s2)] : [normalizarNome(s1)];
+        // const nomeEquipe = isDuo ? `${s1} e ${s2}` : s1;
 
         const btn = document.getElementById('btnSubmit');
         btn.disabled = true;
