@@ -306,7 +306,7 @@
     </p>
     
     <div class="counter-badge">
-        Desafios Disponíveis: <span id="availableCount">15</span> / <span id="totalCount">15</span>
+        Desafios Disponíveis: <span id="availableCount">20</span> / <span id="totalCount">20</span>
     </div>
 
     <!-- Mensagem em destaque quando os desafios acabarem -->
@@ -323,33 +323,29 @@
         <div class="form-group">
             <label>Modalidade de Trabalho <span style="color: var(--danger);">*</span>:</label>
             <div class="radio-group">
-           
-            <label class="radio-label">
-                <input type="radio" name="modality" value="individual" required checked onclick="toggleMember2(false)"> Individual
-            </label>
-                <!-- A OPÇÃO EM DUPLA FOI REMOVIDA DA EXIBIÇÃO COMENTANDO O BLOCO ABAIXO -->
-                <!-- 
                 <label class="radio-label">
                     <input type="radio" name="modality" value="duo" required onclick="toggleMember2(true)"> Em Dupla
                 </label>
-                -->
+                <label class="radio-label">
+                    <input type="radio" name="modality" value="solo" required onclick="toggleMember2(false)"> Individual
+                </label>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="member1">Nome do Integrante 1:</label>
-            <input type="text" id="member1" required placeholder="Digite o nome completo">
+            <label for="student1">Nome do Aluno 1 <span style="color: var(--danger);">*</span>:</label>
+            <input type="text" id="student1" placeholder="Digite o nome completo" required>
         </div>
 
-        <!-- Este campo do integrante 2 deve iniciar oculto com display:none já que a dupla foi removida -->
-        <div class="form-group" id="groupMember2" style="display: none;">
-            <label for="member2">Nome do Integrante 2:</label>
-            <input type="text" id="member2" placeholder="Digite o nome completo">
+        <!-- Oculto por padrão até o aluno selecionar "Em Dupla" -->
+        <div class="form-group" id="groupStudent2" style="display: none;">
+            <label for="student2">Nome do Aluno 2 <span style="color: var(--danger);">*</span>:</label>
+            <input type="text" id="student2" placeholder="Digite o nome completo">
         </div>
 
-        <button type="submit" id="btnSubmit" class="btn-submit">Realizar Sorteio do Tema</button>
+        <button type="submit" id="btnSubmit" class="btn-submit">Registrar e Sortear Desafio</button>
     </form>
-    
+
     <div id="resultCard" class="result-card">
         <h2>Desafio Sorteado</h2>
         <div id="resTeam" style="font-weight: bold; margin-bottom: 10px; color: #fff;"></div>
@@ -516,7 +512,7 @@
         }
     }
 
-       // Submissão do Formulário
+    // Submissão do Formulário
     document.getElementById('registrationForm').addEventListener('submit', async function(e) {
         e.preventDefault();
 
@@ -526,9 +522,6 @@
             return;
         }
 
-        /* ==========================================================================
-           CÓDIGO ORIGINAL DA DUPLA COMENTADO (Para reativar, remova o /* e o */ )
-           ==========================================================================
         const isDuo = modalityOption.value === 'duo';
         const s1 = document.getElementById('student1').value.trim();
         const s2 = document.getElementById('student2').value.trim();
@@ -540,13 +533,6 @@
 
         const novosAlunos = isDuo ? [normalizarNome(s1), normalizarNome(s2)] : [normalizarNome(s1)];
         const nomeEquipe = isDuo ? `${s1} e ${s2}` : s1;
-        ========================================================================== */
-
-        // --- CÓDIGO TEMPORÁRIO (ENQUANTO A DUPLA ESTIVER COMENTADA) ---
-        const s1 = document.getElementById('student1').value.trim();
-        const novosAlunos = [normalizarNome(s1)];
-        const nomeEquipe = s1;
-        // -------------------------------------------------------------
 
         const btn = document.getElementById('btnSubmit');
         btn.disabled = true;
@@ -577,7 +563,8 @@
             };
             exibirResultado(jaRegistrado.equipe, desafioObj, true, alunoConflituoso);
             atualizarContador();
-
+            return;
+        }
 
         // Filtrar opções restantes
         const titulosOcupados = registrosNaNuvem.map(r => r.desafio);
@@ -600,11 +587,7 @@
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    /* CÓDIGO ORIGINAL DA DUPLA COMENTADO:
-                    modalidade: isDuo ? "Dupla" : "Individual", */
-                    
-                    // CÓDIGO TEMPORÁRIO (Força Individual enquanto as duplas estão desativadas)
-                    modalidade: "Individual",
+                    modalidade: isDuo ? "Dupla" : "Individual",
                     equipe: nomeEquipe,
                     desafio: objetoSorteado.title,
                     descricao: objetoSorteado.desc // 1. ATIVADO: Agora envia para o Apps Script
@@ -612,11 +595,7 @@
             });
 
             registrosNaNuvem.push({
-                /* CÓDIGO ORIGINAL DA DUPLA COMENTADO:
-                modalidade: isDuo ? "Dupla" : "Individual", */
-                
-                // CÓDIGO TEMPORÁRIO
-                modalidade: "Individual",
+                modalidade: isDuo ? "Dupla" : "Individual",
                 equipe: nomeEquipe,
                 desafio: objetoSorteado.title,
                 descricao: objetoSorteado.desc // Guardado no histórico local também
@@ -653,13 +632,8 @@
 
     function resetView() {
         document.getElementById('registrationForm').reset();
-        
-        // CORRIGIDO: Removido o ".style.style" duplicado que travava o JavaScript
-        const group2 = document.getElementById('groupStudent2') || document.getElementById('groupMember2');
-        const student2 = document.getElementById('student2') || document.getElementById('member2');
-        if (group2) group2.style.display = 'none';
-        if (student2) student2.required = false;
-
+        document.getElementById('groupStudent2').style.display = 'none';
+        document.getElementById('student2').required = false;
         document.getElementById('resultCard').style.display = 'none';
         document.getElementById('registrationForm').style.display = 'block';
         atualizarContador();
@@ -673,8 +647,6 @@
     // Tabela do professor exibe apenas o título (sem a coluna de descrição na tela)
     function atualizarTabelaProfessor() {
         const tbody = document.getElementById('historyTableBody');
-        if (!tbody) return; // Proteção caso o elemento não exista na tela
-        
         if (registrosNaNuvem.length === 0) {
             tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Nenhum sorteio realizado ainda.</td></tr>`;
             return;
