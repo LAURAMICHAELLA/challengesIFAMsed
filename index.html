@@ -516,7 +516,7 @@
         }
     }
 
-    // Submissão do Formulário
+       // Submissão do Formulário
     document.getElementById('registrationForm').addEventListener('submit', async function(e) {
         e.preventDefault();
 
@@ -526,17 +526,27 @@
             return;
         }
 
+        /* ==========================================================================
+           CÓDIGO ORIGINAL DA DUPLA COMENTADO (Para reativar, remova o /* e o */ )
+           ==========================================================================
         const isDuo = modalityOption.value === 'duo';
         const s1 = document.getElementById('student1').value.trim();
         const s2 = document.getElementById('student2').value.trim();
 
-         if (isDuo && !s2) {
-             alert("Por favor, preencha o nome do segundo aluno.");
-             return;
-         }
+        if (isDuo && !s2) {
+            alert("Por favor, preencha o nome do segundo aluno.");
+            return;
+        }
 
         const novosAlunos = isDuo ? [normalizarNome(s1), normalizarNome(s2)] : [normalizarNome(s1)];
         const nomeEquipe = isDuo ? `${s1} e ${s2}` : s1;
+        ========================================================================== */
+
+        // --- CÓDIGO TEMPORÁRIO (ENQUANTO A DUPLA ESTIVER COMENTADA) ---
+        const s1 = document.getElementById('student1').value.trim();
+        const novosAlunos = [normalizarNome(s1)];
+        const nomeEquipe = s1;
+        // -------------------------------------------------------------
 
         const btn = document.getElementById('btnSubmit');
         btn.disabled = true;
@@ -567,8 +577,7 @@
             };
             exibirResultado(jaRegistrado.equipe, desafioObj, true, alunoConflituoso);
             atualizarContador();
-            return;
-        }
+
 
         // Filtrar opções restantes
         const titulosOcupados = registrosNaNuvem.map(r => r.desafio);
@@ -591,7 +600,11 @@
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    modalidade: isDuo ? "Dupla" : "Individual",
+                    /* CÓDIGO ORIGINAL DA DUPLA COMENTADO:
+                    modalidade: isDuo ? "Dupla" : "Individual", */
+                    
+                    // CÓDIGO TEMPORÁRIO (Força Individual enquanto as duplas estão desativadas)
+                    modalidade: "Individual",
                     equipe: nomeEquipe,
                     desafio: objetoSorteado.title,
                     descricao: objetoSorteado.desc // 1. ATIVADO: Agora envia para o Apps Script
@@ -599,7 +612,11 @@
             });
 
             registrosNaNuvem.push({
-                modalidade: isDuo ? "Dupla" : "Individual",
+                /* CÓDIGO ORIGINAL DA DUPLA COMENTADO:
+                modalidade: isDuo ? "Dupla" : "Individual", */
+                
+                // CÓDIGO TEMPORÁRIO
+                modalidade: "Individual",
                 equipe: nomeEquipe,
                 desafio: objetoSorteado.title,
                 descricao: objetoSorteado.desc // Guardado no histórico local também
@@ -636,8 +653,13 @@
 
     function resetView() {
         document.getElementById('registrationForm').reset();
-        document.getElementById('groupStudent2').style.display = 'none';
-        document.getElementById('student2').required = false;
+        
+        // CORREÇÃO AUXILIAR: Ajustado para o ID correto do seu HTML se necessário
+        const group2 = document.getElementById('groupStudent2') || document.getElementById('groupMember2');
+        const student2 = document.getElementById('student2') || document.getElementById('member2');
+        if (group2) group2.style.style.display = 'none';
+        if (student2) student2.required = false;
+
         document.getElementById('resultCard').style.display = 'none';
         document.getElementById('registrationForm').style.display = 'block';
         atualizarContador();
