@@ -654,7 +654,7 @@
     function resetView() {
         document.getElementById('registrationForm').reset();
         
-        // CORREÇÃO AUXILIAR: Ajustado para o ID correto do seu HTML se necessário
+        // CORRIGIDO: Removido o ".style.style" duplicado que travava o JavaScript
         const group2 = document.getElementById('groupStudent2') || document.getElementById('groupMember2');
         const student2 = document.getElementById('student2') || document.getElementById('member2');
         if (group2) group2.style.display = 'none';
@@ -673,6 +673,8 @@
     // Tabela do professor exibe apenas o título (sem a coluna de descrição na tela)
     function atualizarTabelaProfessor() {
         const tbody = document.getElementById('historyTableBody');
+        if (!tbody) return; // Proteção caso o elemento não exista na tela
+        
         if (registrosNaNuvem.length === 0) {
             tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Nenhum sorteio realizado ainda.</td></tr>`;
             return;
